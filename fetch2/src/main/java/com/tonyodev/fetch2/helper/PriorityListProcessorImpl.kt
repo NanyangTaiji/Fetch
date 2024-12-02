@@ -206,6 +206,7 @@ class PriorityListProcessorImpl(private val handlerWrapper: HandlerWrapper,
     override fun sendBackOffResetSignal() {
         synchronized(lock) {
             val intent = Intent(ACTION_QUEUE_BACKOFF_RESET)
+            intent.setPackage(context.packageName)
             intent.putExtra(EXTRA_NAMESPACE, namespace)
             context.sendBroadcast(intent)
         }
