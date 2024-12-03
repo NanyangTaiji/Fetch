@@ -1,11 +1,6 @@
 package com.tonyodev.fetch2.helper
 
 import android.annotation.SuppressLint
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
-import android.os.Build
 import com.tonyodev.fetch2.*
 import com.tonyodev.fetch2.downloader.DownloadManager
 import com.tonyodev.fetch2core.HandlerWrapper
@@ -27,10 +22,10 @@ class PriorityListProcessorImpl(private val handlerWrapper: HandlerWrapper,
                                 private val listenerCoordinator: ListenerCoordinator,
                                 @Volatile
                                             override var downloadConcurrentLimit: Int,
-                                private val context: Context,
                                 private val namespace: String,
-                                private val prioritySort: PrioritySort)
-    : PriorityListProcessor<Download> {
+                                private val prioritySort: PrioritySort
+    )
+    : PriorityListProcessor<Download>, PriorityBackoffResetCallback {
 
     private val lock = Any()
     @Volatile
@@ -55,28 +50,9 @@ class PriorityListProcessorImpl(private val handlerWrapper: HandlerWrapper,
             }
         }
     }
-    private val priorityBackoffResetReceiver: BroadcastReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            if (context != null && intent != null) {
-                when (intent.action) {
-                    ACTION_QUEUE_BACKOFF_RESET -> {
-                        if (!stopped && !paused && namespace == intent.getStringExtra(EXTRA_NAMESPACE)) {
-                            resetBackOffTime()
-                        }
-                    }
-                }
-            }
-        }
-    }
 
     init {
         networkInfoProvider.registerNetworkChangeListener(networkChangeListener)
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            context.registerReceiver(priorityBackoffResetReceiver, IntentFilter(ACTION_QUEUE_BACKOFF_RESET), Context.RECEIVER_NOT_EXPORTED)
-        }
-        else {
-            context.registerReceiver(priorityBackoffResetReceiver, IntentFilter(ACTION_QUEUE_BACKOFF_RESET))
-        }
     }
 
     private val priorityIteratorRunnable = Runnable {
@@ -178,6 +154,15 @@ class PriorityListProcessorImpl(private val handlerWrapper: HandlerWrapper,
         }
     }
 
+    override fun onResetBackoffTime(namespace: String?) {
+        handlerWrapper.post {
+            if (!stopped && !paused && this.namespace == namespace) {
+                resetBackOffTime()
+            }
+        }
+    }
+
+
     private fun registerPriorityIterator() {
         if (downloadConcurrentLimit > 0) {
             handlerWrapper.postDelayed(priorityIteratorRunnable, backOffTime)
@@ -205,17 +190,13 @@ class PriorityListProcessorImpl(private val handlerWrapper: HandlerWrapper,
 
     override fun sendBackOffResetSignal() {
         synchronized(lock) {
-            val intent = Intent(ACTION_QUEUE_BACKOFF_RESET)
-            intent.setPackage(context.packageName)
-            intent.putExtra(EXTRA_NAMESPACE, namespace)
-            context.sendBroadcast(intent)
+            onResetBackoffTime(namespace)
         }
     }
 
     override fun close() {
         synchronized(lock) {
             networkInfoProvider.unregisterNetworkChangeListener(networkChangeListener)
-            context.unregisterReceiver(priorityBackoffResetReceiver)
         }
     }
 

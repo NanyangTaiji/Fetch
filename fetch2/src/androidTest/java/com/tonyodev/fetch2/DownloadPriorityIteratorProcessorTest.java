@@ -16,6 +16,7 @@ import com.tonyodev.fetch2.downloader.DownloadManager;
 import com.tonyodev.fetch2.downloader.DownloadManagerImpl;
 import com.tonyodev.fetch2.downloader.DownloadManagerCoordinator;
 import com.tonyodev.fetch2.fetch.LiveSettings;
+import com.tonyodev.fetch2.helper.PriorityBackoffResetCallback;
 import com.tonyodev.fetch2.provider.GroupInfoProvider;
 import com.tonyodev.fetch2core.DefaultStorageResolver;
 import com.tonyodev.fetch2core.Downloader;
@@ -72,11 +73,11 @@ public class DownloadPriorityIteratorProcessorTest {
         final GroupInfoProvider groupInfoProvider = new GroupInfoProvider(namespace, downloadProvider);
         final ListenerCoordinator listenerCoordinator = new ListenerCoordinator(namespace, groupInfoProvider, downloadProvider, uiHandler);
         final DefaultStorageResolver storageResolver = new DefaultStorageResolver(appContext, tempDir);
-        final DownloadManager downloadManager = new DownloadManagerImpl(client, concurrentLimit,
+        final DownloadManagerImpl downloadManager = new DownloadManagerImpl(client, concurrentLimit,
                 progessInterval, fetchLogger, networkInfoProvider, retryOnNetworkGain,
                  downloadInfoUpdater, downloadManagerCoordinator,
-                listenerCoordinator, serverDownloader, false, storageResolver,
-                appContext, namespace, groupInfoProvider, FetchDefaults.DEFAULT_GLOBAL_AUTO_RETRY_ATTEMPTS, false);
+                listenerCoordinator, serverDownloader, false, storageResolver
+                , namespace, groupInfoProvider, FetchDefaults.DEFAULT_GLOBAL_AUTO_RETRY_ATTEMPTS, false);
         priorityListProcessorImpl = new PriorityListProcessorImpl(
                 new HandlerWrapper(namespace, null),
                 new DownloadProvider(databaseManagerWrapper),
@@ -85,9 +86,9 @@ public class DownloadPriorityIteratorProcessorTest {
                 fetchLogger,
                 listenerCoordinator,
                 concurrentLimit,
-                appContext,
                 namespace,
                 PrioritySort.ASC);
+        downloadManager.setPriorityBackoffResetCallback((PriorityBackoffResetCallback) priorityListProcessorImpl);
     }
 
     @Test

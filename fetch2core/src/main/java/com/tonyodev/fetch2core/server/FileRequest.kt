@@ -75,7 +75,7 @@ data class FileRequest(val type: Int = TYPE_INVALID,
         const val FIELD_SIZE = "Size"
         const val FIELD_PERSIST_CONNECTION = "Persist-Connection"
 
-        @Suppress("UNCHECKED_CAST")
+        @Suppress("UNCHECKED_CAST", "DEPRECATION")
         override fun createFromParcel(source: Parcel): FileRequest {
             return FileRequest(
                     type = source.readInt(),

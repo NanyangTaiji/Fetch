@@ -65,7 +65,7 @@ abstract class FileResolver(context: Context) {
                 }
             }
             "file" -> {
-                val file = File(fileUri.path)
+                val file = File(fileUri.path.toString())
                 if (file.exists() && file.canWrite()) {
                     createUriInputResourceWrapper(FileInputStream(file), null)
                 } else {

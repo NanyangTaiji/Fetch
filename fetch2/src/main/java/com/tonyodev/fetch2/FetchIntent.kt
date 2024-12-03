@@ -2,8 +2,6 @@
 
 package com.tonyodev.fetch2
 
-const val ACTION_QUEUE_BACKOFF_RESET = "com.tonyodev.fetch2.action.QUEUE_BACKOFF_RESET"
-
 const val ACTION_TYPE_INVALID = -1
 const val ACTION_TYPE_PAUSE = 0
 const val ACTION_TYPE_RESUME = 1

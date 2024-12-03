@@ -83,7 +83,7 @@ class FileResource : Parcelable, Serializable {
 
     companion object CREATOR : Parcelable.Creator<FileResource> {
 
-        @Suppress("UNCHECKED_CAST")
+        @Suppress("UNCHECKED_CAST", "DEPRECATION")
         override fun createFromParcel(source: Parcel): FileResource {
             val fileResource = FileResource()
             fileResource.id = source.readLong()

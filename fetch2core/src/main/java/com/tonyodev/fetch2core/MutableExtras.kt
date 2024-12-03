@@ -107,7 +107,7 @@ open class MutableExtras(protected val mutableData: MutableMap<String, String> =
 
     companion object CREATOR : Parcelable.Creator<MutableExtras> {
 
-        @Suppress("UNCHECKED_CAST")
+        @Suppress("UNCHECKED_CAST", "DEPRECATION")
         override fun createFromParcel(source: Parcel): MutableExtras {
             return MutableExtras((source.readSerializable() as HashMap<String, String>).toMutableMap())
         }

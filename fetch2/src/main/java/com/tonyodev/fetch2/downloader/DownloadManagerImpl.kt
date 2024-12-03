@@ -1,12 +1,11 @@
 package com.tonyodev.fetch2.downloader
 
-import android.content.Context
-import android.content.Intent
 import com.tonyodev.fetch2.*
 import com.tonyodev.fetch2.exception.FetchException
 import com.tonyodev.fetch2.helper.DownloadInfoUpdater
 import com.tonyodev.fetch2.helper.FileDownloaderDelegate
 import com.tonyodev.fetch2.fetch.ListenerCoordinator
+import com.tonyodev.fetch2.helper.PriorityBackoffResetCallback
 import com.tonyodev.fetch2.provider.GroupInfoProvider
 import com.tonyodev.fetch2.provider.NetworkInfoProvider
 import com.tonyodev.fetch2.util.getRequestForDownload
@@ -26,14 +25,17 @@ class DownloadManagerImpl(private val httpDownloader: Downloader<*, *>,
                           private val fileServerDownloader: FileServerDownloader,
                           private val hashCheckingEnabled: Boolean,
                           private val storageResolver: StorageResolver,
-                          private val context: Context,
                           private val namespace: String,
                           private val groupInfoProvider: GroupInfoProvider,
                           private val globalAutoRetryMaxAttempts: Int,
-                          private val preAllocateFileOnCreation: Boolean) : DownloadManager {
+                          private val preAllocateFileOnCreation: Boolean
+    ) : DownloadManager {
 
     private val lock = Any()
     private var executor: ExecutorService? = getNewDownloadExecutorService(concurrentLimit)
+
+    var priorityBackoffResetCallback: PriorityBackoffResetCallback? = null
+
     @Volatile
     override var concurrentLimit: Int = concurrentLimit
         set(value) {
@@ -108,10 +110,7 @@ class DownloadManagerImpl(private val httpDownloader: Downloader<*, *>,
                         logger.e("DownloadManager failed to start download $download", e)
                     } finally {
                         removeDownloadMappings(download)
-                        val intent = Intent(ACTION_QUEUE_BACKOFF_RESET)
-                        intent.setPackage(context.packageName)
-                        intent.putExtra(EXTRA_NAMESPACE, namespace)
-                        context.sendBroadcast(intent)
+                        priorityBackoffResetCallback?.onResetBackoffTime(namespace)
                     }
                 }
                 return true

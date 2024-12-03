@@ -173,7 +173,7 @@ open class Extras(
 
     companion object CREATOR : Parcelable.Creator<Extras> {
 
-        @Suppress("UNCHECKED_CAST")
+        @Suppress("UNCHECKED_CAST", "DEPRECATION")
         override fun createFromParcel(source: Parcel): Extras {
             return Extras(source.readSerializable() as HashMap<String, String>)
         }

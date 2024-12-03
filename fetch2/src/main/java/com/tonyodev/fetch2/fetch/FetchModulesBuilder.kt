@@ -117,11 +117,11 @@ object FetchModulesBuilder {
                     fileServerDownloader = fetchConfiguration.fileServerDownloader,
                     hashCheckingEnabled = fetchConfiguration.hashCheckingEnabled,
                     storageResolver = fetchConfiguration.storageResolver,
-                    context = fetchConfiguration.appContext,
                     namespace = fetchConfiguration.namespace,
                     groupInfoProvider = groupInfoProvider,
                     globalAutoRetryMaxAttempts = fetchConfiguration.maxAutoRetryAttempts,
-                    preAllocateFileOnCreation = fetchConfiguration.preAllocateFileOnCreation)
+                    preAllocateFileOnCreation = fetchConfiguration.preAllocateFileOnCreation
+                )
             priorityListProcessor = PriorityListProcessorImpl(
                     handlerWrapper = handlerWrapper,
                     downloadProvider = downloadProvider,
@@ -130,9 +130,9 @@ object FetchModulesBuilder {
                     logger = fetchConfiguration.logger,
                     listenerCoordinator = listenerCoordinator,
                     downloadConcurrentLimit = fetchConfiguration.concurrentLimit,
-                    context = fetchConfiguration.appContext,
                     namespace = fetchConfiguration.namespace,
                     prioritySort = fetchConfiguration.prioritySort)
+            downloadManager.priorityBackoffResetCallback = priorityListProcessor
             priorityListProcessor.globalNetworkType = fetchConfiguration.globalNetworkType
             fetchHandler = fetchConfiguration.fetchHandler ?: FetchHandlerImpl(
                     namespace = fetchConfiguration.namespace,

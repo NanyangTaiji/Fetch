@@ -1,4 +1,5 @@
 @file:JvmName("FetchAndroidExtensions")
+@file:Suppress("DEPRECATION")
 
 package com.tonyodev.fetch2core
 

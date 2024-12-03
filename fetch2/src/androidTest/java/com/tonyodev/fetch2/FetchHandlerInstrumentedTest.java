@@ -19,6 +19,7 @@ import com.tonyodev.fetch2.downloader.DownloadManagerCoordinator;
 import com.tonyodev.fetch2.fetch.FetchHandler;
 import com.tonyodev.fetch2.fetch.FetchHandlerImpl;
 import com.tonyodev.fetch2.fetch.LiveSettings;
+import com.tonyodev.fetch2.helper.PriorityBackoffResetCallback;
 import com.tonyodev.fetch2.provider.GroupInfoProvider;
 import com.tonyodev.fetch2core.DefaultStorageResolver;
 import com.tonyodev.fetch2core.Downloader;
@@ -89,11 +90,11 @@ public class FetchHandlerInstrumentedTest {
         final GroupInfoProvider groupInfoProvider = new GroupInfoProvider(namespace, downloadProvider);
         final ListenerCoordinator listenerCoordinator = new ListenerCoordinator(namespace, groupInfoProvider, downloadProvider, uiHandler);
         final DefaultStorageResolver storageResolver = new DefaultStorageResolver(appContext, tempDir);
-        final DownloadManager downloadManager = new DownloadManagerImpl(client, concurrentLimit,
+        final DownloadManagerImpl downloadManager = new DownloadManagerImpl(client, concurrentLimit,
                 progessInterval, fetchLogger, networkInfoProvider, retryOnNetworkGain,
                 downloadInfoUpdater, downloadManagerCoordinator,
                 listenerCoordinator, serverDownloader, false, storageResolver,
-                appContext, namespace, groupInfoProvider, FetchDefaults.DEFAULT_GLOBAL_AUTO_RETRY_ATTEMPTS, false);
+                namespace, groupInfoProvider, FetchDefaults.DEFAULT_GLOBAL_AUTO_RETRY_ATTEMPTS, false);
         priorityListProcessorImpl = new PriorityListProcessorImpl(
                 handlerWrapper,
                 new DownloadProvider(databaseManagerWrapper),
@@ -102,9 +103,9 @@ public class FetchHandlerInstrumentedTest {
                 fetchLogger,
                 listenerCoordinator,
                 concurrentLimit,
-                appContext,
                 namespace,
                 PrioritySort.ASC);
+        downloadManager.setPriorityBackoffResetCallback((PriorityBackoffResetCallback) priorityListProcessorImpl);
         fetchHandler = new FetchHandlerImpl(namespace, databaseManagerWrapper, downloadManager,
                 priorityListProcessorImpl, fetchLogger, autoStart,
                 client, serverClient, listenerCoordinator, uiHandler, storageResolver, null,
