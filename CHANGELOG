@@ -1,3 +1,11 @@
+Androidx version 3.4.0
+1. Fixes slow download start issues on Android 14+
+2. Updated library dependencies.
+3. Connectivity manager deprecation fixes.Thanks to @vicajilau
+4. Range End Handling fixes. Thanks to @Baniares
+5. Documentation update. Thanks to @gardenappl
+6. NetworkInfoProvider fixes. Thanks to @nstratak
+
 Version 3.1.0/ Androidx version 3.2.0
 1. Android 14 compatibility, min SDK 16, AGP 8.2.0, Gradle 8.5, Kotlin 1.9.20. Thanks to @helloimfrog
 2. Android SDK 34 and fixes of register receiver. Thanks to @Kutikov
