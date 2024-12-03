@@ -62,7 +62,7 @@ allprojects {
 
 Add the Gradle dependency to your application's build.gradle file.
 ```groovy
-implementation "com.github.tonyofrancis.Fetch:fetch2:3.4.0"
+implementation "com.github.tonyofrancis.Fetch:fetch2:3.4.1"
 ```
 
 Next, get an instance of Fetch and request a download.
@@ -228,7 +228,7 @@ to use the OkHttp Downloader instead. You can create your custom downloaders
 if necessary. See the Java docs for details.
 
 ```groovy
-implementation "com.github.tonyofrancis.Fetch:fetch2okhttp:3.4.0"
+implementation "com.github.tonyofrancis.Fetch:fetch2okhttp:3.4.1"
 ```
 
 Set the OkHttp Downloader for Fetch to use.
@@ -250,7 +250,7 @@ If you would like to take advantage of RxJava2 features when using Fetch,
 add the following gradle dependency to your application's build.gradle file.
 
 ```groovy
-implementation "com.github.tonyofrancis.Fetch:fetch2rx:3.4.0"
+implementation "com.github.tonyofrancis.Fetch:fetch2rx:3.4.1"
 ```
 
 RxFetch makes it super easy to enqueue download requests and query downloads using rxJava2 functional methods.
@@ -287,7 +287,7 @@ added in the coming days.
 Start using FetchFileServer by adding the gradle dependency to your application's build.gradle file.
  
 ```groovy
-implementation "com.github.tonyofrancis.Fetch:fetch2fileserver:3.4.0"
+implementation "com.github.tonyofrancis.Fetch:fetch2fileserver:3.4.1"
 ```
 
 Start a FetchFileServer instance and add resource files that it can serve to connected clients.
@@ -397,7 +397,7 @@ Fetch1 Migration
 Migrate downloads from Fetch1 to Fetch2 using the migration assistant. Add the following gradle dependency to your application's build.gradle file.
 
 ```groovy
-implementation "com.github.tonyofrancis.Fetch:fetchmigrator:3.4.0"
+implementation "com.github.tonyofrancis.Fetch:fetchmigrator:3.4.1"
 ```
 
 Then run the Migrator.

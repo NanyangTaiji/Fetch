@@ -1,3 +1,6 @@
+Androidx version 3.4.1
+1. Fix for slow download start on Android 14+. Removed dependency on broadcast receiver
+
 Androidx version 3.4.0
 1. Fixes slow download start issues on Android 14+
 2. Updated library dependencies.
